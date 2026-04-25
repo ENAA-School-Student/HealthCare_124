@@ -1,1 +1,6 @@
-[HealthCare.mdj](../../Bureau/UML/HealthCare.mdj)
+![Consulter les patients.jpg](../../Desktop/UML/UML%20imgs/Consulter%20les%20patients.jpg)
+![Creation d'un dossier medicale sequence diagramme .jpg](../../Desktop/UML/UML%20imgs/Creation%20d%27un%20dossier%20medicale%20sequence%20diagramme%20.jpg)
+![creer un rendez-vous.jpg](../../Desktop/UML/UML%20imgs/creer%20un%20rendez-vous.jpg)
+![heltcare class diagramme.jpg](../../Desktop/UML/UML%20imgs/heltcare%20class%20diagramme.jpg)
+![Mettre à jour un diagnostic SequenceDiagram.jpg](../../Desktop/UML/UML%20imgs/Mettre%20%C3%A0%20jour%20un%20diagnostic%20SequenceDiagram.jpg)
+![UseCaseDiagram1 heltcare.jpg](../../Desktop/UML/UML%20imgs/UseCaseDiagram1%20heltcare.jpg)
