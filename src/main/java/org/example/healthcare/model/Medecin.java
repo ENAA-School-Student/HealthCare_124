@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -40,5 +42,10 @@ public class Medecin {
 
     @NotBlank(message = "la specialite est obligatoire")
     private String specialite;
+
+
+    @OneToMany(mappedBy = "medecin")
+    private List<RendezVous> rendezVous;
+
 
 }

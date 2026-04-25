@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -45,6 +46,13 @@ public class Patient {
     @JsonFormat(pattern = "yyyy-MM-dd")
     @NotNull(message = "La date de naissance est obligatoire")
     private LocalDate dateNaissance;
+
+
+    @OneToOne
+    private DossierMedicale dossierMedicale;
+
+    @OneToMany(mappedBy = "patient")
+    private List<RendezVous> rendezVous;
 
 
 
