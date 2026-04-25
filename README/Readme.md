@@ -1,0 +1,6 @@
+![UseCaseDiagram1 heltcare.jpg](UseCaseDiagram1%20heltcare.jpg)
+![Mettre à jour un diagnostic SequenceDiagram.jpg](Mettre%20%C3%A0%20jour%20un%20diagnostic%20SequenceDiagram.jpg)
+![heltcare class diagramme.jpg](heltcare%20class%20diagramme.jpg)
+![creer un rendez-vous.jpg](creer%20un%20rendez-vous.jpg)
+![Creation d'un dossier medicale sequence diagramme .jpg](Creation%20d%27un%20dossier%20medicale%20sequence%20diagramme%20.jpg)
+![Consulter les patients.jpg](Consulter%20les%20patients.jpg)
