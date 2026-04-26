@@ -1,30 +1,21 @@
-package org.example.healthcare.model;
+package org.example.healthcare.dto;
 
 
-import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name="medecins")
-public class Medecin {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
-
-
-    @NotBlank(message = "le nom est obligatoire")
-    private String nom;
-
+public class PatientRequestDto {
     @NotBlank(message = "le prénom est obligatoire")
     private String prenom;
 
@@ -40,15 +31,9 @@ public class Medecin {
     )
     private String telephone;
 
-    @NotBlank(message = "la specialite est obligatoire")
-    private String specialite;
 
-
-    @OneToMany(mappedBy = "medecin")
-    private List<RendezVous> rendezVous;
-
-    @OneToMany(mappedBy = "medecin", cascade = CascadeType.ALL)
-    private List<Consultation> consultations;
-
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @NotNull(message = "La date de naissance est obligatoire")
+    private LocalDate dateNaissance;
 
 }

@@ -3,7 +3,6 @@ package org.example.healthcare.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,13 +19,13 @@ import java.time.LocalDateTime;
 public class RendezVous {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @NotNull(message = "la date de le rendez-vous est obligatoire")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime dateRendezVous;
 
-
+    @NotNull(message = "Le statut du rendez-vous est obligatoire")
     private RendezVousStatut statut;
 
 

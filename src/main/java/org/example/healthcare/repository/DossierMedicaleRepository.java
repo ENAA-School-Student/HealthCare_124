@@ -1,0 +1,11 @@
+package org.example.healthcare.repository;
+
+import org.example.healthcare.model.DossierMedicale;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface DossierMedicaleRepository extends JpaRepository<DossierMedicale , Long> {
+    DossierMedicale findDossierMedicaleByPatient_Nom(String patientNom);
+
+    DossierMedicale findDossierMedicaleByPatient_Id(Long patientId);
+
+}
