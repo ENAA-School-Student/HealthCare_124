@@ -1,17 +1,21 @@
-package org.example.healthcare.dto;
+package org.example.healthcare.dto.patient;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class MedecinRequestDto {
+@NoArgsConstructor
+public class PatientRequestDto {
 
     @NotBlank(message = "le nom est obligatoire")
     private String nom;
@@ -31,7 +35,9 @@ public class MedecinRequestDto {
     )
     private String telephone;
 
-    @NotBlank(message = "la specialite est obligatoire")
-    private String specialite;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @NotNull(message = "La date de naissance est obligatoire")
+    private LocalDate dateNaissance;
 
 }

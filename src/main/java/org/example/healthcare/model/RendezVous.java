@@ -26,6 +26,7 @@ public class RendezVous {
     private LocalDateTime dateRendezVous;
 
     @NotNull(message = "Le statut du rendez-vous est obligatoire")
+    @Enumerated(EnumType.STRING)
     private RendezVousStatut statut;
 
 

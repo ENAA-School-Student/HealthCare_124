@@ -18,7 +18,7 @@ import java.util.List;
 @Table(name="medecins")
 public class Medecin {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
 
@@ -31,14 +31,6 @@ public class Medecin {
     @NotBlank(message = "l'email est obligatoire")
     @Email(message = "Invalid email format")
     private String email;
-
-
-    @NotBlank(message = "Le numéro de téléphone est obligatoire")
-    @Pattern(
-            regexp = "^\\+?[0-9]{8,15}$",
-            message = "Numéro de téléphone invalide"
-    )
-    private String telephone;
 
     @NotBlank(message = "la specialite est obligatoire")
     private String specialite;

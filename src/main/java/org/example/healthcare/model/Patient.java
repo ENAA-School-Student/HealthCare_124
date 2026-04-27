@@ -48,7 +48,7 @@ public class Patient {
     private LocalDate dateNaissance;
 
 
-    @OneToOne
+    @OneToOne(mappedBy = "patient")
     private DossierMedicale dossierMedicale;
 
     @OneToMany(mappedBy = "patient")

@@ -1,4 +1,4 @@
-package org.example.healthcare.dto;
+package org.example.healthcare.dto.rendezVous;
 
 
 import lombok.AllArgsConstructor;
@@ -17,6 +17,6 @@ public class RendezVousResponseDto {
     private Long id ;
     private LocalDateTime dateRendezVous;
     private RendezVousStatut statut;
-    private String patientNom;
-    private String medecinNom;
+    private Patient patient;
+    private Medecin medecin;
 }

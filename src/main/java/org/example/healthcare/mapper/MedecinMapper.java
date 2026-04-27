@@ -1,8 +1,8 @@
 package org.example.healthcare.mapper;
 
 
-import org.example.healthcare.dto.MedecinRequestDto;
-import org.example.healthcare.dto.MedecinResponseDto;
+import org.example.healthcare.dto.medecin.MedecinRequestDto;
+import org.example.healthcare.dto.medecin.MedecinResponseDto;
 import org.example.healthcare.model.Medecin;
 import org.example.healthcare.model.Patient;
 import org.mapstruct.Mapper;

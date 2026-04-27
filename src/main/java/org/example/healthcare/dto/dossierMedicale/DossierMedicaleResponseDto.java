@@ -1,9 +1,10 @@
-package org.example.healthcare.dto;
+package org.example.healthcare.dto.dossierMedicale;
 
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.healthcare.model.Patient;
 
 import java.time.LocalDateTime;
 
@@ -15,5 +16,5 @@ public class DossierMedicaleResponseDto {
     private String diagnostic;
     private String observation;
     private LocalDateTime dateCreation;
-    private String patientNom;
+    private Patient patient;
 }

@@ -21,7 +21,7 @@ CREATE TABLE dossiers_medicaux
     id           BIGINT PRIMARY KEY AUTO_INCREMENT,
     diagnostic   TEXT,
     observations TEXT,
-    dateCreation DATE   NOT NULL,
+    date_creation DATETIME   NOT NULL,
     patient_id   BIGINT NOT NULL,
     FOREIGN KEY (patient_id) REFERENCES patients (id)
 );
@@ -30,7 +30,7 @@ CREATE TABLE dossiers_medicaux
 CREATE TABLE rendez_vous
 (
     id             BIGINT PRIMARY KEY AUTO_INCREMENT,
-    dateRendezVous DATE         NOT NULL,
+    date_rendez_vous DATETIME         NOT NULL,
     statut         VARCHAR(255) NOT NULL CHECK ( statut IN ("PLANIFIE", "ANNULE", "TERMINE") ),
     patient_id     BIGINT,
     medecin_id     BIGINT,
@@ -38,13 +38,14 @@ CREATE TABLE rendez_vous
     FOREIGN KEY (medecin_id) REFERENCES medecins (id)
 );
 
-CREATE TABLE notes_medicales
+CREATE TABLE consultations
 (
-    id          BIGINT PRIMARY KEY AUTO_INCREMENT,
-    dossier_id  BIGINT   NOT NULL,
-    medecin_id  BIGINT   NOT NULL,
-    diagnostic  TEXT,
-    observation TEXT,
-    date_consultation   DATETIME NOT NULL,
+    id                BIGINT PRIMARY KEY AUTO_INCREMENT,
+    diagnostic        TEXT,
+    observation       TEXT,
+    date_consultation DATETIME NOT NULL,
+    dossier_id        BIGINT   NOT NULL,
+    medecin_id        BIGINT   NOT NULL,
     FOREIGN KEY (dossier_id) REFERENCES dossiers_medicaux (id),
-    FOREIGN KEY (medecin_id) REFERENCES medecins(id)
+    FOREIGN KEY (medecin_id) REFERENCES medecins (id)
+);
