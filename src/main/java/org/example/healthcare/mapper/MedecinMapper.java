@@ -13,5 +13,5 @@ import java.util.List;
 public interface MedecinMapper {
     Medecin toEntity(MedecinRequestDto requestDto);
     MedecinResponseDto toDto(Medecin medecin);
-    List<MedecinResponseDto> toLsitDto(List<Patient> patients);
+    List<MedecinResponseDto> toLsitDto(List<Medecin> medecins);
 }
