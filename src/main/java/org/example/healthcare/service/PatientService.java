@@ -49,13 +49,11 @@ public class PatientService {
     }
 
     @Transactional
-    public boolean supprimer(Long id) {
+    public void supprimer(Long id) {
         if (!patientRepository.existsById(id)) {
             throw new EntityNotFoundException("Patient introuvable");
         }
         patientRepository.deleteById(id);
-        return true;
     }
-
 
 }

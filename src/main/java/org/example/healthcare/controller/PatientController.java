@@ -51,6 +51,7 @@ public class PatientController {
     public ResponseEntity<Void> supprimer(
             @PathVariable Long id
     ){
+        patientService.supprimer(id);
         return ResponseEntity.ok().build();
     }
 

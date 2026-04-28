@@ -8,4 +8,6 @@ public interface DossierMedicaleRepository extends JpaRepository<DossierMedicale
 
     DossierMedicale findDossierMedicaleByPatient_Id(Long patientId);
 
+    boolean existsByPatient_Id(Long patientId);
+
 }
