@@ -40,7 +40,7 @@ public class RendezVousService {
         if (!medecinRepository.existsById(requestDto.getMedecinId())){
             throw new EntityNotFoundException("Medecin introuvable");
         }
-        if (!rendezVousRepository.existsByMedecinIdAndDateRendezVous(requestDto.getMedecinId(),requestDto.getDateRendezVous())){
+        if (rendezVousRepository.existsByMedecinIdAndDateRendezVous(requestDto.getMedecinId(),requestDto.getDateRendezVous())){
             throw new IllegalStateException("Le médecin est déjà pris à cette date et heure.");
         }
         RendezVous rendezVous = rendezVousMapper.toEntity(requestDto);
@@ -72,6 +72,7 @@ public class RendezVousService {
         }
         RendezVous rendezVous = rendezVousRepository.findById(id).get();
         rendezVous.setStatut(rendezVousStatut);
+        rendezVousRepository.save(rendezVous);
     }
 
     public void supprimer(Long id){
@@ -80,6 +81,17 @@ public class RendezVousService {
         }
         medecinRepository.deleteById(id);
     }
+
+
+    public RendezVousResponseDto chercherRebdezVousParPatient(Long id){
+        return rendezVousMapper.toDto(rendezVousRepository.findRendezVousByPatientId(id));
+    }
+
+    public RendezVousResponseDto chercherRebdezVousParMedecin(Long id){
+        return rendezVousMapper.toDto(rendezVousRepository.findRendezVousByMedecinId(id));
+    }
+
+
 
 
 }

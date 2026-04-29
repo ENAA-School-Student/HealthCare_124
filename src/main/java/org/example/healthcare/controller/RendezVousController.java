@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/rendez-vous")
+@RequestMapping("/rendezvous")
 public class RendezVousController {
 
     @Autowired
@@ -55,5 +55,17 @@ public class RendezVousController {
     public ResponseEntity<Void> supprimer(@PathVariable Long id){
         rendezVousService.supprimer(id);
         return ResponseEntity.ok().build();
+    }
+
+
+    @GetMapping("/patient/{id}")
+    public RendezVousResponseDto chercherParPatient(@PathVariable Long id){
+        return rendezVousService.chercherRebdezVousParPatient(id);
+    }
+
+
+    @GetMapping("/medecin/{id}")
+    public RendezVousResponseDto chercherParMedecin(@PathVariable Long id){
+        return rendezVousService.chercherRebdezVousParMedecin(id);
     }
 }

@@ -8,4 +8,9 @@ import java.time.LocalDateTime;
 public interface RendezVousRepository extends JpaRepository<RendezVous , Long> {
 
     boolean existsByMedecinIdAndDateRendezVous(Long medecinId, LocalDateTime dateRendezVous);
+
+
+    RendezVous findRendezVousByPatientId(Long patientId);
+
+    RendezVous findRendezVousByMedecinId(Long medecinId);
 }

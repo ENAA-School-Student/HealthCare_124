@@ -2,6 +2,7 @@ package org.example.healthcare.model;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -32,10 +33,12 @@ public class RendezVous {
 
     @ManyToOne
     @JoinColumn(name = "patient_id")
+    @JsonIgnore
     private Patient patient;
 
     @ManyToOne
     @JoinColumn(name = "medecin_id")
+    @JsonIgnore
     private Medecin medecin;
 
 

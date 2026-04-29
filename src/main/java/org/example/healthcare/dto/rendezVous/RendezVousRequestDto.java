@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 public class RendezVousRequestDto {
 
     @NotNull(message = "la date de le rendez-vous est obligatoire")
-    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime dateRendezVous;
 
     @NotNull(message = "Le statut du rendez-vous est obligatoire")

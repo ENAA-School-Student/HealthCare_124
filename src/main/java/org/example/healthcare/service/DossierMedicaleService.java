@@ -3,11 +3,14 @@ package org.example.healthcare.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.example.healthcare.dto.consultation.ConsultationResponseDto;
 import org.example.healthcare.dto.dossierMedicale.DossierMedicaleRequestDto;
 import org.example.healthcare.dto.dossierMedicale.DossierMedicaleResponseDto;
+import org.example.healthcare.mapper.ConsultationMapper;
 import org.example.healthcare.mapper.DossierMedicaleMapper;
 import org.example.healthcare.model.DossierMedicale;
 import org.example.healthcare.model.Patient;
+import org.example.healthcare.repository.ConsultationRepository;
 import org.example.healthcare.repository.DossierMedicaleRepository;
 import org.example.healthcare.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,12 @@ public class DossierMedicaleService {
 
     @Autowired
     private PatientRepository patientRepository;
+
+    @Autowired
+    private ConsultationRepository consultationRepository;
+
+    @Autowired
+    private ConsultationMapper consultationMapper;
 
 
     @Transactional
@@ -71,7 +80,14 @@ public class DossierMedicaleService {
         dossierMedicaleRepository.deleteById(id);
     }
 
-//    public DossierMedicaleResponseDto consulterParPatient(Patient patient){
-//
-//    }
+    public DossierMedicaleResponseDto consulterParPatient(Long id){
+        return dossierMedicaleMapper.toDto(dossierMedicaleRepository.findDossierMedicaleByPatient_Id(id));
+    }
+
+    public List<ConsultationResponseDto> consulterDossierConsultations(Long id){
+        return consultationMapper.toListDto(consultationRepository.findAllByDossierId(id));
+    }
+
+
+
 }
