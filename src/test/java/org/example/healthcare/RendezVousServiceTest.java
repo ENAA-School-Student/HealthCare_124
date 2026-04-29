@@ -38,7 +38,7 @@ public class RendezVousServiceTest {
 
     @Test
     @DisplayName("1 : Test d'ajouter un rendez-vous")
-    public void test(){
+    public void ajouterRebderVOus(){
         RendezVousRequestDto requestDto = new RendezVousRequestDto(
                 LocalDateTime.now(),
                 RendezVousStatut.PLANIFIE,
@@ -52,6 +52,25 @@ public class RendezVousServiceTest {
         RendezVousResponseDto response = rendezVousService.ajouter(requestDto);
 
         assertEquals(patient.getEmail(),response.getPatient().getEmail());
+    }
+
+    @Test
+    @DisplayName("2 : Test de modifier la statut d'un rendez-vous")
+    public void modifierStatut(){
+        RendezVousRequestDto requestDto = new RendezVousRequestDto(
+                LocalDateTime.now(),
+                RendezVousStatut.PLANIFIE,
+                1L,
+                1L
+        );
+
+        RendezVousResponseDto responseDto_A = rendezVousService.ajouter(requestDto);
+
+        rendezVousService.modifierRendezVousStatut(responseDto_A.getId(),RendezVousStatut.TERMINE);
+
+        RendezVousResponseDto responseDto = rendezVousService.consulter(responseDto_A.getId());
+
+        assertEquals(RendezVousStatut.TERMINE , responseDto.getStatut());
     }
 
 }

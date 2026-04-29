@@ -21,7 +21,6 @@ public class DossierMedicale {
     private Long id;
 
 
-
     @NotBlank(message="la date de creation est obligatoire")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime dateCreation;
