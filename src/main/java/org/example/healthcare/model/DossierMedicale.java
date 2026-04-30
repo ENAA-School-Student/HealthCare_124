@@ -2,8 +2,10 @@ package org.example.healthcare.model;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,8 +23,7 @@ public class DossierMedicale {
     private Long id;
 
 
-    @NotBlank(message="la date de creation est obligatoire")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @NotNull(message="la date de creation est obligatoire")
     private LocalDateTime dateCreation;
 
 
@@ -31,5 +32,6 @@ public class DossierMedicale {
 
     @OneToOne
     @JoinColumn(name = "patient_id")
+    @JsonIgnore
     private Patient patient;
 }

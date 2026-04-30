@@ -28,15 +28,18 @@ public class PatientServiceTest {
         PatientRequestDto requestDto = new PatientRequestDto(
                 "patient",
                 "patient",
-                "patient@mail.com",
+                "patienttest55@mail.com",
                 "292939387",
                 LocalDate.parse("2000-10-10")
         );
 
         PatientRespenseDto respenseDto = patientService.ajouter(requestDto);
         assertNotNull(respenseDto.getId());
-        assertEquals("patient@mail.com", respenseDto.getEmail());
+        assertEquals("patienttest55@mail.com", respenseDto.getEmail());
     }
+
+
+
 
     @Test
     @DisplayName("Test d'ajouter patient cas d'email existant")
@@ -44,7 +47,7 @@ public class PatientServiceTest {
         PatientRequestDto requestDto = new PatientRequestDto(
                 "patient",
                 "patient",
-                "patient@mail.com",
+                "patienttest2@mail.com",
                 "292939387",
                 LocalDate.parse("2000-10-10")
         );
@@ -52,7 +55,7 @@ public class PatientServiceTest {
         PatientRequestDto requestDto2 = new PatientRequestDto(
                 "patient2",
                 "patient2",
-                "patient@mail.com",
+                "patienttest2@mail.com",
                 "2929393827",
                 LocalDate.parse("2000-10-10")
         );

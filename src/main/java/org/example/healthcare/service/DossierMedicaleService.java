@@ -42,7 +42,7 @@ public class DossierMedicaleService {
         if (!patientRepository.existsById(requestDto.getPatientId())) {
             throw new EntityNotFoundException("Patient introuvable");
         }
-        if (!dossierMedicaleRepository.existsByPatient_Id(requestDto.getPatientId())){
+        if (dossierMedicaleRepository.existsByPatient_Id(requestDto.getPatientId())){
             throw new IllegalStateException("Ce patient possède déjà un dossier médical.");
         }
         DossierMedicale dossierMedicale = dossierMedicaleMapper.toEnity(requestDto);

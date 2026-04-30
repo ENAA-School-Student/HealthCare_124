@@ -39,6 +39,8 @@ public class ConsultationService {
             throw new EntityNotFoundException("Medecin introuvable");
         }
         Consultation consultation = consultationMapper.toEntity(requestDto);
+        consultation.setDossier(dossierMedicaleRepository.findById(requestDto.getDossier_medicale_id()).get());
+        consultation.setMedecin(medecinRepository.findById(requestDto.getMedecin_id()).get());
         return consultationMapper.toDto(consultationRepository.save(consultation));
     }
 
@@ -56,6 +58,8 @@ public class ConsultationService {
             throw new EntityNotFoundException("consultations introuvable");
         }
         Consultation consultation = consultationMapper.toEntity(requestDto);
+        consultation.setDossier(dossierMedicaleRepository.findById(requestDto.getDossier_medicale_id()).get());
+        consultation.setMedecin(medecinRepository.findById(requestDto.getMedecin_id()).get());
         return consultationMapper.toDto(consultationRepository.save(consultation));
     }
 

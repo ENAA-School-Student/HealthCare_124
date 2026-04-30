@@ -1,6 +1,5 @@
 package org.example.healthcare.dto.dossierMedicale;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -15,12 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class DossierMedicaleRequestDto {
 
-    private String diagnostic;
-
-    private String observation;
-
-    @NotBlank(message="la date de creation est obligatoire")
-    @JsonFormat(pattern = "yyyy-MM-dd")
+    @NotNull(message="la date de creation est obligatoire")
     private LocalDateTime dateCreation;
 
     @NotNull(message = "le patient id est nécessaire")
