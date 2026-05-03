@@ -73,11 +73,14 @@ public class DossierMedicaleService {
         return dossierMedicaleMapper.toDto(dossierMedicaleRepository.save(dossierMedicale));
     }
 
+    @Transactional
     public void supprimer(Long id){
-        if (!dossierMedicaleRepository.existsById(id)){
-            throw new EntityNotFoundException("Dossier introuvable");
+        DossierMedicale dossier = dossierMedicaleRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Dossier introuvable"));
+
+        if (dossier.getPatient() != null) {
+            dossier.getPatient().setDossierMedicale(null);
         }
-        dossierMedicaleRepository.deleteById(id);
     }
 
     public DossierMedicaleResponseDto consulterParPatient(Long id){
