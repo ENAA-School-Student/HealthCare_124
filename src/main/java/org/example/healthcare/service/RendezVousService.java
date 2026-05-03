@@ -63,6 +63,8 @@ public class RendezVousService {
         }
         RendezVous rendezVous_a_changer = rendezVousMapper.toEntity(requestDto);
         rendezVous_a_changer.setId(id);
+        rendezVous_a_changer.setPatient(patientRepository.findById(requestDto.getPatientId()).get());
+        rendezVous_a_changer.setMedecin(medecinRepository.findById(requestDto.getMedecinId()).get());
         return rendezVousMapper.toDto(rendezVousRepository.save(rendezVous_a_changer));
     }
 
@@ -79,7 +81,7 @@ public class RendezVousService {
         if (!rendezVousRepository.existsById(id)){
             throw new EntityNotFoundException("Rendez-vous introuvable");
         }
-        medecinRepository.deleteById(id);
+        rendezVousRepository.deleteById(id);
     }
 
 

@@ -63,6 +63,8 @@ public class ConsultationService {
         return consultationMapper.toDto(consultationRepository.save(consultation));
     }
 
+
+    @Transactional
     public void supprimer(Long id){
         if (!consultationRepository.existsById(id)){
             throw new EntityNotFoundException("consultations introuvable");

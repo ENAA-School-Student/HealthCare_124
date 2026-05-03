@@ -49,9 +49,8 @@ public class MedecinService {
 
     @Transactional
     public void supprimer(Long id){
-        if (!medecinRepository.existsById(id)){
-            throw new EntityNotFoundException("Medecin introuvable");
-        }
-        medecinRepository.deleteById(id);
+        Medecin medecin = medecinRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Medecin introuvable"));
+        medecinRepository.delete(medecin);
     }
 }
