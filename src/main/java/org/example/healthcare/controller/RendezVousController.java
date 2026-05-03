@@ -59,13 +59,13 @@ public class RendezVousController {
 
 
     @GetMapping("/patient/{id}")
-    public RendezVousResponseDto chercherParPatient(@PathVariable Long id){
+    public List<RendezVousResponseDto> chercherParPatient(@PathVariable Long id){
         return rendezVousService.chercherRebdezVousParPatient(id);
     }
 
 
     @GetMapping("/medecin/{id}")
-    public RendezVousResponseDto chercherParMedecin(@PathVariable Long id){
+    public List<RendezVousResponseDto> chercherParMedecin(@PathVariable Long id){
         return rendezVousService.chercherRebdezVousParMedecin(id);
     }
 }

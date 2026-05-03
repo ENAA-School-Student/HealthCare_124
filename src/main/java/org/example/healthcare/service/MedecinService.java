@@ -3,11 +3,13 @@ package org.example.healthcare.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.example.healthcare.dto.medecin.ChallengeResponseDto;
 import org.example.healthcare.dto.medecin.MedecinRequestDto;
 import org.example.healthcare.dto.medecin.MedecinResponseDto;
 import org.example.healthcare.mapper.MedecinMapper;
 import org.example.healthcare.model.Medecin;
 import org.example.healthcare.repository.MedecinRepository;
+import org.example.healthcare.repository.RendezVousRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,8 @@ public class MedecinService {
 
     @Autowired
     private MedecinMapper medecinMapper;
+    @Autowired
+    private RendezVousRepository rendezVousRepository;
 
 
     @Transactional
@@ -33,6 +37,7 @@ public class MedecinService {
     public List<MedecinResponseDto> consulterTous(){
         return medecinMapper.toLsitDto(medecinRepository.findAll());
     }
+
 
     public MedecinResponseDto consulter(Long id){
         return medecinMapper.toDto(medecinRepository.findById(id).orElse(null));
@@ -53,5 +58,19 @@ public class MedecinService {
             throw new EntityNotFoundException("Medecin introuvable");
         }
         medecinRepository.deleteById(id);
+    }
+
+
+
+    @Transactional
+    public List<ChallengeResponseDto> consulterTousAvecNombreDesRendezVous(){
+        List<ChallengeResponseDto> list = medecinMapper.tolistchallengesDTO(medecinRepository.findAll());
+        return list.stream().map(
+                m -> {
+                    m.setCountRendezvous(rendezVousRepository.countRendezVousByMedecinId(m.getId()));
+                    return m;
+                }
+        ).toList();
+
     }
 }

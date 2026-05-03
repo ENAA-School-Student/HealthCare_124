@@ -83,12 +83,12 @@ public class RendezVousService {
     }
 
 
-    public RendezVousResponseDto chercherRebdezVousParPatient(Long id){
-        return rendezVousMapper.toDto(rendezVousRepository.findRendezVousByPatientId(id));
+    public List<RendezVousResponseDto> chercherRebdezVousParPatient(Long id){
+        return rendezVousMapper.toListDto(rendezVousRepository.findRendezVousByPatientId(id));
     }
 
-    public RendezVousResponseDto chercherRebdezVousParMedecin(Long id){
-        return rendezVousMapper.toDto(rendezVousRepository.findRendezVousByMedecinId(id));
+    public List<RendezVousResponseDto> chercherRebdezVousParMedecin(Long id){
+        return rendezVousMapper.toListDto(rendezVousRepository.findRendezVousByMedecinId(id));
     }
 
 

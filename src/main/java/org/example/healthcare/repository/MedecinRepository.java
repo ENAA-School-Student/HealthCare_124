@@ -4,6 +4,8 @@ import org.example.healthcare.model.Medecin;
 import org.example.healthcare.model.RendezVous;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.web.servlet.tags.EditorAwareTag;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -16,8 +18,8 @@ public interface MedecinRepository extends JpaRepository<Medecin , Long> {
     List<RendezVous> recupererLesRendezVousPardateJPQ(LocalDateTime date);
 
 
-    @Query(value = "SELECT * FROM rendez_vous JOIN medecins ON rendez_vous.medecin_id = medecins.id WHERE rendez_vous.date_rendez_vous =:date",nativeQuery = true)
-    List<RendezVous> recupererLesRendezVousPardateSQL(LocalDateTime date);
+    @Query(value = "SELECT rendez_vous.* FROM rendez_vous JOIN medecins ON rendez_vous.medecin_id = medecins.id WHERE rendez_vous.date_rendez_vous =:date",nativeQuery = true)
+    List<RendezVous> recupererLesRendezVousPardateSQL(@Param("date") LocalDateTime date);
 
 
 
