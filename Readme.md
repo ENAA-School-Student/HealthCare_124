@@ -1,8 +1,8 @@
 
 ### 1. Diagramme de Class 
-![heltcare class diagramme.jpg](README/heltcare%20class%20diagramme.jpg)
+![use cas diagramme.jpg](README/use%20cas%20diagramme.jpg)
 ### 2. Diagramme de cas d'utilisations
-![UseCaseDiagram1 heltcare.jpg](README/UseCaseDiagram1%20heltcare.jpg)
+![classejfaefaefjfjfjfffjfjf.jpg](README/classejfaefaefjfjfjfffjfjf.jpg)
 ### 3. Diagramme de Séquence : Création d'un Rendez-vous
 ![creer un rendez-vous.jpg](README/creer%20un%20rendez-vous.jpg)
 ### 4. Diagramme de Séquence : Mettre à jour un diagnostic
