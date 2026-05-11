@@ -53,4 +53,11 @@ public class MedecinService {
                 .orElseThrow(() -> new EntityNotFoundException("Medecin introuvable"));
         medecinRepository.delete(medecin);
     }
+
+
+
+
+    public List<MedecinResponseDto> recupererLesMedcinsParPatient(Long id){
+        return medecinMapper.toLsitDto(medecinRepository.recupererLesmedcindunpatient(id));
+    }
 }

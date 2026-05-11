@@ -40,6 +40,7 @@ public class ConsultationServiceTest {
     private MedecinService medecinService;
 
     private Long savedDossierId;
+
     private Long savedMedecinId;
 
 
@@ -85,4 +86,5 @@ public class ConsultationServiceTest {
             consultationService.ajouter(requestWithBadDossier);
         });
     }
+
 }

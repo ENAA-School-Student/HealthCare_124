@@ -52,4 +52,6 @@ public class MedecinController {
         medecinService.supprimer(id);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/")
 }
