@@ -10,29 +10,22 @@ import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.healthcare.enums.UserRoles;
 
 import java.time.LocalDate;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "patients")
-public class Patient {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Patient extends User {
 
     @NotBlank(message = "le nom est obligatoire")
     private String nom;
 
     @NotBlank(message = "le prénom est obligatoire")
     private String prenom;
-
-    @NotBlank(message = "l'email est obligatoire")
-    @Email(message = "Invalid email format")
-    private String email;
 
 
     @NotBlank(message = "Le numéro de téléphone est obligatoire")
@@ -54,6 +47,12 @@ public class Patient {
     @OneToMany(mappedBy = "patient")
     private List<RendezVous> rendezVous;
 
+
+
+    public Patient() {
+        super();
+        this.setRole(UserRoles.PATIENT);
+    }
 
 
 }

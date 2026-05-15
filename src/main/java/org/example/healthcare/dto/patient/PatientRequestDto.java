@@ -23,10 +23,6 @@ public class PatientRequestDto {
     @NotBlank(message = "le prénom est obligatoire")
     private String prenom;
 
-    @NotBlank(message = "l'email est obligatoire")
-    @Email(message = "Invalid email format")
-    private String email;
-
 
     @NotBlank(message = "Le numéro de téléphone est obligatoire")
     @Pattern(
@@ -40,4 +36,8 @@ public class PatientRequestDto {
     @NotNull(message = "La date de naissance est obligatoire")
     private LocalDate dateNaissance;
 
+    public PatientRequestDto(String alami, String ahmed, String mail, String s, LocalDate parse) {
+
+        
+    }
 }

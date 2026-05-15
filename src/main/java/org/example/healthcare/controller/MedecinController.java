@@ -30,6 +30,7 @@ public class MedecinController {
         return ResponseEntity.status(HttpStatus.CREATED).body(medecinService.ajouter(requestDto));
     }
 
+
     @GetMapping("/{id}")
     public MedecinResponseDto consulter(
             @PathVariable Long id
@@ -52,6 +53,4 @@ public class MedecinController {
         medecinService.supprimer(id);
         return ResponseEntity.ok().build();
     }
-
-    @GetMapping("/")
 }

@@ -30,14 +30,12 @@ public class MedecinServiceTest {
         MedecinRequestDto medecinRequest = new MedecinRequestDto(
                 "Ouazzani",
                 "Driss",
-                "dr.ouazzani@healthcare.ma",
                 "Cardiologie"
         );
 
         MedecinRequestDto medecinRequest_m = new MedecinRequestDto(
                 "Ouazzani",
                 "Driss",
-                "dr.chetouni@healthcare.ma",
                 "Cardiologie"
         );
 
@@ -55,7 +53,6 @@ public class MedecinServiceTest {
         MedecinRequestDto medecinRequest_m = new MedecinRequestDto(
                 "Ouazzani",
                 "Driss",
-                "dr.chetouni@healthcare.ma",
                 "Cardiologie"
         );
         Assertions.assertThrows(EntityNotFoundException.class,()->{
