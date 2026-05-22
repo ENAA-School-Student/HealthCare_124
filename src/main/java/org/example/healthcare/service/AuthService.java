@@ -31,38 +31,38 @@ public class AuthService {
     private JwtService jwtService;
 
 
-    public User regisrer(UserResquestDTO user){
-        User user_result;
-        if (user.getRole().equals(UserRoles.PATIENT)){
-            Patient patient = new Patient();
-            patient.setUserName(user.getUserName());
-            patient.setEmail(user.getEmail());
-            patient.setPassword(passwordEncoder.encode(user.getPassword()));
-            patient.setNom(user.getPatientDTO().getNom());
-            patient.setPrenom(user.getPatientDTO().getPrenom());
-            patient.setTelephone( user.getPatientDTO().getTelephone());
-            patient.setDateNaissance(user.getPatientDTO().getDateNaissance());
-            user_result = userRedpository.save(patient);
-        }
-         else if (user.getRole().equals(UserRoles.MEDECIN)){
-            Medecin medecin = new Medecin();
-            medecin.setUserName(user.getUserName());
-            medecin.setEmail(user.getEmail());
-            medecin.setPassword(passwordEncoder.encode(user.getPassword()));
-            medecin.setNom(user.getMedecinDTO().getNom());
-            medecin.setPrenom(user.getMedecinDTO().getPrenom());
-            medecin.setSpecialite(user.getMedecinDTO().getSpecialite());
-            user_result = userRedpository.save(medecin);
-        }
-         else {
-            Admin admin = new Admin();
-            admin.setEmail(user.getEmail());
-            admin.setPassword(passwordEncoder.encode(user.getPassword()));
-            admin.setRole(UserRoles.ADMIN);
-            user_result = userRedpository.save(admin);
-        }
-         return user_result;
-    }
+     public User regisrer(UserResquestDTO user){
+         User user_result;
+         if (user.getRole().equals(UserRoles.PATIENT)){
+             Patient patient = new Patient();
+             patient.setUserName(user.getUserName());
+             patient.setEmail(user.getEmail());
+             patient.setPassword(passwordEncoder.encode(user.getPassword()));
+             patient.setNom(user.getPatientDTO().getNom());
+             patient.setPrenom(user.getPatientDTO().getPrenom());
+             patient.setTelephone( user.getPatientDTO().getTelephone());
+             patient.setDateNaissance(user.getPatientDTO().getDateNaissance());
+             user_result = userRedpository.save(patient);
+         }
+          else if (user.getRole().equals(UserRoles.MEDECIN)){
+             Medecin medecin = new Medecin();
+             medecin.setUserName(user.getUserName());
+             medecin.setEmail(user.getEmail());
+             medecin.setPassword(passwordEncoder.encode(user.getPassword()));
+             medecin.setNom(user.getMedecinDTO().getNom());
+             medecin.setPrenom(user.getMedecinDTO().getPrenom());
+             medecin.setSpecialite(user.getMedecinDTO().getSpecialite());
+             user_result = userRedpository.save(medecin);
+         }
+          else {
+             Admin admin = new Admin();
+             admin.setUserName(user.getUserName());
+             admin.setEmail(user.getEmail());
+             admin.setPassword(passwordEncoder.encode(user.getPassword()));
+             user_result = userRedpository.save(admin);
+         }
+          return user_result;
+     }
 
 
     public String login(String email,String password) {

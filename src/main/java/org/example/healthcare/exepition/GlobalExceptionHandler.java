@@ -1,5 +1,7 @@
 package org.example.healthcare.exepition;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -58,5 +60,49 @@ public class GlobalExceptionHandler {
         Map<String, String> errors = new HashMap<>();
         errors.put("error", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+    }
+
+    // JWT EXPIRED
+    @ExceptionHandler(ExpiredJwtException.class)
+    public ResponseEntity<Map<String, String>> handleExpiredJwt(
+            ExpiredJwtException ex
+    ) {
+
+        Map<String, String> errors = new HashMap<>();
+
+        errors.put("error", "JWT token expired");
+
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(errors);
+    }
+
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<Map<String, String>> handleJwtException(
+            JwtException ex
+    ) {
+
+        Map<String, String> errors = new HashMap<>();
+
+        errors.put("error", "Invalid JWT token");
+
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(errors);
+    }
+
+    // GLOBAL ERROR
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, String>> handleGlobalException(
+            Exception ex
+    ) {
+
+        Map<String, String> errors = new HashMap<>();
+
+        errors.put("error", ex.getMessage());
+
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(errors);
     }
 }

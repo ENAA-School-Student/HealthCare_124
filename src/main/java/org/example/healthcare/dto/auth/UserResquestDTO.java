@@ -35,4 +35,8 @@ public class UserResquestDTO {
 
     private MedecinDTO medecinDTO;
     private PatientDTO patientDTO;
+
+    public String getName(){
+        return userName;
+    }
 }

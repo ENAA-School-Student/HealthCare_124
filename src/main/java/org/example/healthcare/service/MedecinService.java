@@ -9,6 +9,9 @@ import org.example.healthcare.mapper.MedecinMapper;
 import org.example.healthcare.model.Medecin;
 import org.example.healthcare.repository.MedecinRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,10 +57,22 @@ public class MedecinService {
         medecinRepository.delete(medecin);
     }
 
-
-
-
     public List<MedecinResponseDto> recupererLesMedcinsParPatient(Long id){
         return medecinMapper.toLsitDto(medecinRepository.recupererLesmedcindunpatient(id));
+    }
+
+
+    public Page<MedecinResponseDto> consulterMedecinTriparSpecialite(int page,int size){
+        Pageable pageable = PageRequest.of(page,size);
+
+        return medecinRepository.findAllByOrderBySpecialiteAsc(pageable).map(medecinMapper::toDto);
+
+    }
+
+    public Page<MedecinResponseDto>  chercherMedecinParSpecialite(String specialite,int page,int size){
+        Pageable pageable = PageRequest.of(page,size);
+
+        return medecinRepository.findAllBySpecialite(specialite,pageable).map(medecinMapper::toDto);
+
     }
 }

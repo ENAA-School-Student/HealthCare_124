@@ -12,6 +12,9 @@ import org.example.healthcare.repository.MedecinRepository;
 import org.example.healthcare.repository.PatientRepository;
 import org.example.healthcare.repository.RendezVousRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -93,6 +96,15 @@ public class RendezVousService {
         return rendezVousMapper.toListDto(rendezVousRepository.findRendezVousByMedecinId(id));
     }
 
+    public Page<RendezVousResponseDto> consulterRenderVousTriPAreDate(int page,int size){
+        Pageable pageable = PageRequest.of(page,size);
+        return rendezVousRepository.findAllByOrderByDateRendezVousAsc(pageable).map(rendezVousMapper::toDto);
+    }
+
+    public Page<RendezVousResponseDto> consulterRendervousparStatut(RendezVousStatut statut,int page,int size){
+        Pageable pageable = PageRequest.of(page,size);
+        return rendezVousRepository.findAllByStatut(statut,pageable).map(rendezVousMapper::toDto);
+    }
 
 
 

@@ -7,9 +7,10 @@ import org.example.healthcare.dto.auth.UserResquestDTO;
 import org.example.healthcare.dto.auth.UserResponseDTO;
 import org.example.healthcare.model.User;
 import org.example.healthcare.service.AuthService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,15 +32,11 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserResponseDTO> getCurrentUser(Authentication authentication) {
-        Object principal = authentication.getPrincipal();
-        if (principal instanceof User user) {
-            return ResponseEntity.ok(toUserResponse(user));
+    public ResponseEntity<UserResponseDTO> getCurrentUser(@AuthenticationPrincipal User user) {
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        if (principal instanceof UserDetails userDetails) {
-            return ResponseEntity.ok(new UserResponseDTO(null, null, userDetails.getUsername(), null));
-        }
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(toUserResponse(user));
     }
 
     private UserResponseDTO toUserResponse(User user) {

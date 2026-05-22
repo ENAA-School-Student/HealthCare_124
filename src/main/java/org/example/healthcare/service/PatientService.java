@@ -9,6 +9,9 @@ import org.example.healthcare.mapper.PatientMapper;
 import org.example.healthcare.model.Patient;
 import org.example.healthcare.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -54,6 +57,17 @@ public class PatientService {
             throw new EntityNotFoundException("Patient introuvable");
         }
         patientRepository.deleteById(id);
+    }
+
+
+    public Page<PatientRespenseDto> consulterPatientTriparnom(String nom, int page, int size){
+        Pageable pageable = PageRequest.of(page,size);
+        return patientRepository.findAllByOrderByNomDesc(pageable).map(patientMapper::toDto);
+    }
+
+    public  Page<PatientRespenseDto> chercherPatientParNom(String nom, int page, int size){
+        Pageable pageable = PageRequest.of(page,size);
+        return patientRepository.findAllByNom(nom,pageable).map(patientMapper::toDto);
     }
 
 }

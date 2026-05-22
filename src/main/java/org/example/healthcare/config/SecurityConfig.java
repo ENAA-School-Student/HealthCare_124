@@ -1,6 +1,8 @@
 package org.example.healthcare.config;
 
 import lombok.RequiredArgsConstructor;
+import org.example.healthcare.security.JwtAccessDeniedHandler;
+import org.example.healthcare.security.JwtAuthEntryPoint;
 import org.example.healthcare.security.JwtAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +20,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
+    private final JwtAuthEntryPoint jwtAuthEntryPoint;
+    private final JwtAccessDeniedHandler jwtAccessDeniedHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -34,9 +38,18 @@ public class SecurityConfig {
                 )
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/patient/**").hasAnyRole("PATIENT", "ADMIN")
+                        .requestMatchers("/medecin/**").hasAnyRole("MEDECIN", "ADMIN")
+                        .requestMatchers("/consultation/**").hasAnyRole("MEDECIN")
+                        .requestMatchers("/dossier_medicale/**").hasAnyRole("MEDECIN")
+                        .requestMatchers("/rendezvous/**").hasAnyRole("ADMIN","PATIENT")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(jwtAuthEntryPoint)
+                        .accessDeniedHandler(jwtAccessDeniedHandler)
+                )
                 .build();
     }
 
