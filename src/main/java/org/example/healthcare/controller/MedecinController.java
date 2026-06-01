@@ -6,6 +6,7 @@ import org.example.healthcare.dto.medecin.MedecinRequestDto;
 import org.example.healthcare.dto.medecin.MedecinResponseDto;
 import org.example.healthcare.service.MedecinService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -53,4 +54,30 @@ public class MedecinController {
         medecinService.supprimer(id);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/pagines")
+    public Page<MedecinResponseDto> consulterMedecinsPagines(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        return medecinService.consulterMedecinTriparSpecialite(page, size);
+    }
+
+    @GetMapping("/tri/specialite")
+    public Page<MedecinResponseDto> consulterMedecinTriParSpecialite(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        return medecinService.consulterMedecinTriparSpecialite(page, size);
+    }
+
+    @GetMapping("/recherche/specialite")
+    public Page<MedecinResponseDto> chercherMedecinParSpecialitePagine(
+            @RequestParam String specialite,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        return medecinService.chercherMedecinParSpecialite(specialite, page, size);
+    }
+
 }

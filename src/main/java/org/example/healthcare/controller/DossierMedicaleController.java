@@ -8,6 +8,7 @@ import org.example.healthcare.dto.dossierMedicale.DossierMedicaleResponseDto;
 import org.example.healthcare.model.Consultation;
 import org.example.healthcare.service.DossierMedicaleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -66,4 +67,13 @@ public class DossierMedicaleController {
         dossierMedicaleService.supprimer(id);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/pagines")
+    public Page<DossierMedicaleResponseDto> consulterDossiersPagines(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        return dossierMedicaleService.consulterTousPagine(page, size);
+    }
+
 }

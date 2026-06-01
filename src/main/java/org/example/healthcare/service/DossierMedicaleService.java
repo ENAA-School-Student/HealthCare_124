@@ -14,6 +14,9 @@ import org.example.healthcare.repository.ConsultationRepository;
 import org.example.healthcare.repository.DossierMedicaleRepository;
 import org.example.healthcare.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -89,6 +92,11 @@ public class DossierMedicaleService {
 
     public List<ConsultationResponseDto> consulterDossierConsultations(Long id){
         return consultationMapper.toListDto(consultationRepository.findAllByDossierId(id));
+    }
+
+    public Page<DossierMedicaleResponseDto> consulterTousPagine(int page, int size){
+        Pageable pageable = PageRequest.of(page, size);
+        return dossierMedicaleRepository.findAll(pageable).map(dossierMedicaleMapper::toDto);
     }
 
 
