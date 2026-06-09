@@ -53,8 +53,14 @@ public class DossierMedicaleService {
         return dossierMedicaleMapper.toDto(dossierMedicaleRepository.save(dossierMedicale));
     }
 
+    public DossierMedicale findById(Long id) {
+        return dossierMedicaleRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Dossier introuvable"));
+    }
+
     public DossierMedicaleResponseDto consulter(Long id){
-        return dossierMedicaleMapper.toDto(dossierMedicaleRepository.findById(id).orElse(null));
+        return dossierMedicaleMapper.toDto(dossierMedicaleRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Dossier introuvable")));
     }
 
     public List<DossierMedicaleResponseDto> consulterTous(){
@@ -80,10 +86,7 @@ public class DossierMedicaleService {
     public void supprimer(Long id){
         DossierMedicale dossier = dossierMedicaleRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Dossier introuvable"));
-
-        if (dossier.getPatient() != null) {
-            dossier.getPatient().setDossierMedicale(null);
-        }
+        dossierMedicaleRepository.delete(dossier);
     }
 
     public DossierMedicaleResponseDto consulterParPatient(Long id){

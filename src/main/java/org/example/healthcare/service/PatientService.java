@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,7 +33,8 @@ public class PatientService {
     }
 
     public PatientRespenseDto consulter(Long id){
-        Patient patient_chercher = patientRepository.findById(id).orElse(null);
+        Patient patient_chercher = patientRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Patient introuvable"));
         return patientMapper.toDto(patient_chercher);
     }
 
@@ -60,9 +62,15 @@ public class PatientService {
     }
 
 
-    public Page<PatientRespenseDto> consulterPatientTriparnom(String nom, int page, int size){
-        Pageable pageable = PageRequest.of(page,size);
-        return patientRepository.findAllByOrderByNomDesc(pageable).map(patientMapper::toDto);
+    public Page<PatientRespenseDto> consulterPatientTriparnom(String sortField, String sortDirection, int page, int size){
+        Sort sort;
+        if (sortDirection.equalsIgnoreCase("asc")) {
+            sort = Sort.by(sortField).ascending();
+        } else {
+            sort = Sort.by(sortField).descending();
+        }
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return patientRepository.findAll(pageable).map(patientMapper::toDto);
     }
 
     public  Page<PatientRespenseDto> chercherPatientParNom(String nom, int page, int size){

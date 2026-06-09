@@ -34,6 +34,9 @@ public class AuthService {
      public User regisrer(UserResquestDTO user){
          User user_result;
          if (user.getRole().equals(UserRoles.PATIENT)){
+             if (user.getPatientDTO() == null) {
+                 throw new IllegalArgumentException("Les informations du patient sont obligatoires.");
+             }
              Patient patient = new Patient();
              patient.setUserName(user.getUserName());
              patient.setEmail(user.getEmail());
@@ -45,6 +48,9 @@ public class AuthService {
              user_result = userRedpository.save(patient);
          }
           else if (user.getRole().equals(UserRoles.MEDECIN)){
+             if (user.getMedecinDTO() == null) {
+                 throw new IllegalArgumentException("Les informations du médecin sont obligatoires.");
+             }
              Medecin medecin = new Medecin();
              medecin.setUserName(user.getUserName());
              medecin.setEmail(user.getEmail());

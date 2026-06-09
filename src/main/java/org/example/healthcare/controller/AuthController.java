@@ -6,10 +6,10 @@ import org.example.healthcare.dto.auth.LoginRequestDTO;
 import org.example.healthcare.dto.auth.UserResquestDTO;
 import org.example.healthcare.dto.auth.UserResponseDTO;
 import org.example.healthcare.model.User;
+import org.example.healthcare.repository.UserRedpository;
 import org.example.healthcare.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final AuthService authService;
+    private final UserRedpository userRedpository;
 
     @PostMapping("/register")
     public ResponseEntity<UserResponseDTO> register(@Valid @RequestBody UserResquestDTO request) {
@@ -32,7 +33,12 @@ public class AuthController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<UserResponseDTO> getCurrentUser(@AuthenticationPrincipal User user) {
+    public ResponseEntity<UserResponseDTO> getCurrentUser(@AuthenticationPrincipal String email) {
+        if (email == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        User user = userRedpository.findByEmail(email)
+                .orElse(null);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

@@ -48,21 +48,30 @@ public class ConsultationService {
     }
 
 
+    public Consultation findById(Long id) {
+        return consultationRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Consultation introuvable"));
+    }
+
     public ConsultationResponseDto consulter(Long id){
-        return consultationMapper.toDto(consultationRepository.findById(id).get());
+        return consultationMapper.toDto(consultationRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Consultation introuvable")));
     }
 
     public List<ConsultationResponseDto> consulterTous(){
         return consultationMapper.toListDto(consultationRepository.findAll());
     }
 
-    public ConsultationResponseDto modifier(Long id,ConsultationRequestDto requestDto){
-        if (!consultationRepository.existsById(id)){
-            throw new EntityNotFoundException("consultations introuvable");
-        }
-        Consultation consultation = consultationMapper.toEntity(requestDto);
-        consultation.setDossier(dossierMedicaleRepository.findById(requestDto.getDossier_medicale_id()).get());
-        consultation.setMedecin(medecinRepository.findById(requestDto.getMedecin_id()).get());
+    public ConsultationResponseDto modifier(Long id, ConsultationRequestDto requestDto){
+        Consultation consultation = consultationRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Consultation introuvable"));
+        consultation.setDiagnostic(requestDto.getDiagnostic());
+        consultation.setObservation(requestDto.getObservation());
+        consultation.setDate_consultation(requestDto.getDate_consultation());
+        consultation.setDossier(dossierMedicaleRepository.findById(requestDto.getDossier_medicale_id())
+                .orElseThrow(() -> new EntityNotFoundException("Dossier introuvable")));
+        consultation.setMedecin(medecinRepository.findById(requestDto.getMedecin_id())
+                .orElseThrow(() -> new EntityNotFoundException("Medecin introuvable")));
         return consultationMapper.toDto(consultationRepository.save(consultation));
     }
 

@@ -52,8 +52,14 @@ public class RendezVousService {
         return rendezVousMapper.toDto(rendezVousRepository.save(rendezVous));
     }
 
+    public RendezVous findById(Long id) {
+        return rendezVousRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Rendez-vous introuvable"));
+    }
+
     public RendezVousResponseDto consulter(Long id){
-        return rendezVousMapper.toDto(rendezVousRepository.findById(id).orElse(null));
+        return rendezVousMapper.toDto(rendezVousRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Rendez-vous introuvable")));
     }
 
     public List<RendezVousResponseDto> consulterTous(){

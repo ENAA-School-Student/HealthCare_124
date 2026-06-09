@@ -38,7 +38,8 @@ public class MedecinService {
     }
 
     public MedecinResponseDto consulter(Long id){
-        return medecinMapper.toDto(medecinRepository.findById(id).orElse(null));
+        return medecinMapper.toDto(medecinRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Medecin introuvable")));
     }
     @Transactional
     public  MedecinResponseDto modifier(Long id,MedecinRequestDto requestDto){

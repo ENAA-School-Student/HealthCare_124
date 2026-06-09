@@ -1,15 +1,17 @@
 package org.example.healthcare.controller;
 
-
 import jakarta.validation.Valid;
 import org.example.healthcare.dto.patient.PatientRequestDto;
 import org.example.healthcare.dto.patient.PatientRespenseDto;
+import org.example.healthcare.model.User;
+import org.example.healthcare.repository.UserRedpository;
+import org.example.healthcare.security.SecurityUtils;
 import org.example.healthcare.service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,24 +23,23 @@ public class PatientController {
     @Autowired
     PatientService patientService;
 
+    @Autowired
+    UserRedpository userRedpository;
+
     @GetMapping
-    public List<PatientRespenseDto> consulterTous(){
+    public List<PatientRespenseDto> consulterTous() {
         return patientService.consulterTous();
     }
 
     @PostMapping
-    public ResponseEntity<PatientRespenseDto> ajouter(
-           @Valid @RequestBody PatientRequestDto requestDto
-            ){
-        PatientRespenseDto patientRespenseDto = patientService.ajouter(requestDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(patientRespenseDto);
+    public ResponseEntity<PatientRespenseDto> ajouter(@Valid @RequestBody PatientRequestDto requestDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(patientService.ajouter(requestDto));
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('PATIENT')")
-    public PatientRespenseDto consulter(
-            @PathVariable Long id
-    ){
+    public PatientRespenseDto consulter(@PathVariable Long id) {
+        User current = SecurityUtils.getCurrentUser(userRedpository);
+        SecurityUtils.requireOwnerOrAdmin(id, current);
         return patientService.consulter(id);
     }
 
@@ -46,32 +47,20 @@ public class PatientController {
     public ResponseEntity<PatientRespenseDto> modifier(
             @PathVariable Long id,
             @Valid @RequestBody PatientRequestDto patientRequestDto
-    ){
-        return ResponseEntity.status(HttpStatus.CREATED).body(patientService.modifier(id,patientRequestDto));
+    ) {
+        User current = SecurityUtils.getCurrentUser(userRedpository);
+        SecurityUtils.requireOwnerOrAdmin(id, current);
+        return ResponseEntity.ok(patientService.modifier(id, patientRequestDto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> supprimer(
-            @PathVariable Long id
-    ){
+    public ResponseEntity<Void> supprimer(@PathVariable Long id) {
+        User current = SecurityUtils.getCurrentUser(userRedpository);
+        if (!SecurityUtils.isAdmin(current)) {
+            throw new AccessDeniedException("Seul un administrateur peut supprimer un patient.");
+        }
         patientService.supprimer(id);
         return ResponseEntity.ok().build();
-    }
-
-    @GetMapping("/pagines")
-    public Page<PatientRespenseDto> consulterPatientsPagines(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ){
-        return patientService.consulterPatientTriparnom("", page, size);
-    }
-
-    @GetMapping("/tri/nom")
-    public Page<PatientRespenseDto> consulterPatientTriParNom(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
-    ){
-        return patientService.consulterPatientTriparnom("", page, size);
     }
 
     @GetMapping("/recherche/nom")
@@ -79,8 +68,17 @@ public class PatientController {
             @RequestParam String nom,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
-    ){
+    ) {
         return patientService.chercherPatientParNom(nom, page, size);
     }
 
+    @GetMapping("/sorting")
+    public Page<PatientRespenseDto> sorting(
+            @RequestParam int page,
+            @RequestParam int size,
+            @RequestParam String sortField,
+            @RequestParam String sortDirection
+    ) {
+        return patientService.consulterPatientTriparnom(sortField, sortDirection, page, size);
+    }
 }

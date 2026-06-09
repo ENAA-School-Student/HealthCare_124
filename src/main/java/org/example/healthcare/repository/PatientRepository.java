@@ -8,8 +8,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface PatientRepository extends JpaRepository<Patient , Long> {
 
 
+    
 
-    Page<Patient> findAllByOrderByNomDesc(Pageable pageable);
+    Page<Patient> findAllByOrderByNom(Pageable pageable);
+
+    Page<Patient> findAllByOrderByNomAsc(Pageable pageable);
 
 
     Page<Patient> findAllByNom(String nom,Pageable pageable);

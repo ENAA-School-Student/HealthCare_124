@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,6 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -37,13 +39,13 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/auth/me").authenticated()
+                        .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/patient/**").hasAnyRole("PATIENT", "ADMIN")
                         .requestMatchers("/medecin/**").hasAnyRole("MEDECIN", "ADMIN")
                         .requestMatchers("/consultation/**").hasAnyRole("MEDECIN")
                         .requestMatchers("/dossier_medicale/**").hasAnyRole("MEDECIN")
-                        .requestMatchers("/rendezvous/**").hasAnyRole("ADMIN","PATIENT")
+                        .requestMatchers("/rendezvous/**").hasAnyRole("ADMIN", "PATIENT", "MEDECIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
