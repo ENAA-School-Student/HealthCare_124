@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.healthcare.enums.UserRoles;
 
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -17,7 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 @Table(name="medecins")
-public class Medecin extends User{
+public class Medecin extends User implements Serializable {
 
     @NotBlank(message = "le nom est obligatoire")
     private String nom;

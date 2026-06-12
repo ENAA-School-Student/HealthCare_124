@@ -2,7 +2,6 @@ package org.example.healthcare.service;
 
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import org.example.healthcare.dto.rendezVous.RendezVousRequestDto;
 import org.example.healthcare.dto.rendezVous.RendezVousResponseDto;
 import org.example.healthcare.enums.RendezVousStatut;
@@ -11,12 +10,17 @@ import org.example.healthcare.model.RendezVous;
 import org.example.healthcare.repository.MedecinRepository;
 import org.example.healthcare.repository.PatientRepository;
 import org.example.healthcare.repository.RendezVousRepository;
+import org.example.healthcare.utils.ExelExport;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 @Service
@@ -36,6 +40,7 @@ public class RendezVousService {
 
 
     @Transactional
+    @CacheEvict(value = {"rendezVous", "rendezVous-pages"}, allEntries = true)
     public RendezVousResponseDto ajouter(RendezVousRequestDto requestDto){
         if (!patientRepository.existsById(requestDto.getPatientId())) {
             throw new EntityNotFoundException("Patient introuvable");
@@ -52,20 +57,27 @@ public class RendezVousService {
         return rendezVousMapper.toDto(rendezVousRepository.save(rendezVous));
     }
 
+
+
+    @Cacheable(value = "rendezVous" , key = "'entity-' + #id")
     public RendezVous findById(Long id) {
         return rendezVousRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Rendez-vous introuvable"));
     }
 
+    @Cacheable(value = "rendezVous" , key = "'single-' + #id")
     public RendezVousResponseDto consulter(Long id){
         return rendezVousMapper.toDto(rendezVousRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Rendez-vous introuvable")));
     }
 
+
+    @Cacheable(value = "rendezVous" , key = "'list-all'")
     public List<RendezVousResponseDto> consulterTous(){
         return rendezVousMapper.toListDto(rendezVousRepository.findAll());
     }
 
+    @CacheEvict(value = {"rendezVous", "rendezVous-pages"}, allEntries = true)
     public RendezVousResponseDto modifier(Long id , RendezVousRequestDto requestDto){
         if (!rendezVousRepository.existsById(id)){
             throw new EntityNotFoundException("Rendez-vous introuvable");
@@ -77,6 +89,7 @@ public class RendezVousService {
         return rendezVousMapper.toDto(rendezVousRepository.save(rendezVous_a_changer));
     }
 
+    @CacheEvict(value = {"rendezVous", "rendezVous-pages"}, allEntries = true)
     public void modifierRendezVousStatut(Long id,RendezVousStatut rendezVousStatut){
         if (!rendezVousRepository.existsById(id)){
             throw new EntityNotFoundException("Rendez-vous introuvable");
@@ -86,6 +99,7 @@ public class RendezVousService {
         rendezVousRepository.save(rendezVous);
     }
 
+    @CacheEvict(value = {"rendezVous", "rendezVous-pages"}, allEntries = true)
     public void supprimer(Long id){
         if (!rendezVousRepository.existsById(id)){
             throw new EntityNotFoundException("Rendez-vous introuvable");
@@ -94,22 +108,36 @@ public class RendezVousService {
     }
 
 
+    @Cacheable(value = "rendezVous" , key = "'patient-' + #id")
     public List<RendezVousResponseDto> chercherRebdezVousParPatient(Long id){
         return rendezVousMapper.toListDto(rendezVousRepository.findRendezVousByPatientId(id));
     }
 
+    @Cacheable(value = "rendezVous" , key = "'medecin-' + #id")
     public List<RendezVousResponseDto> chercherRebdezVousParMedecin(Long id){
         return rendezVousMapper.toListDto(rendezVousRepository.findRendezVousByMedecinId(id));
     }
 
+
+    @Cacheable(value = "rendezVous-pages", key = "'list-' + #page + '-' + #size")
     public Page<RendezVousResponseDto> consulterRenderVousTriPAreDate(int page,int size){
         Pageable pageable = PageRequest.of(page,size);
         return rendezVousRepository.findAllByOrderByDateRendezVousAsc(pageable).map(rendezVousMapper::toDto);
     }
 
+
+
+    @Cacheable(value = "rendezVous-pages", key = "'status-' + #statut + '-' + #page + '-' + #size")
     public Page<RendezVousResponseDto> consulterRendervousparStatut(RendezVousStatut statut,int page,int size){
         Pageable pageable = PageRequest.of(page,size);
         return rendezVousRepository.findAllByStatut(statut,pageable).map(rendezVousMapper::toDto);
+    }
+
+    @Transactional(readOnly = true)
+    public ByteArrayInputStream exportRendezVousParPatient(Long patientId) {
+        List<RendezVous> rendezVous = rendezVousRepository.findRendezVousByPatientId(patientId);
+        List<RendezVousResponseDto> dtos = rendezVousMapper.toListDto(rendezVous);
+        return ExelExport.listRendezVousToExcel(dtos);
     }
 
 

@@ -8,10 +8,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.healthcare.enums.UserRoles;
 
+import java.io.Serializable;
+
 @Data
 @Entity
 @Table(name = "admins")
-public class Admin extends User {
+public class Admin extends User implements Serializable {
 
     public Admin() {
         super();

@@ -8,6 +8,7 @@ import org.example.healthcare.model.Patient;
 import org.example.healthcare.model.User;
 import org.example.healthcare.repository.UserRedpository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -31,6 +32,7 @@ public class AuthService {
     private JwtService jwtService;
 
 
+    @CacheEvict(value = "users", key = "#user.email")
      public User regisrer(UserResquestDTO user){
          User user_result;
          if (user.getRole().equals(UserRoles.PATIENT)){
@@ -70,7 +72,7 @@ public class AuthService {
           return user_result;
      }
 
-
+    @CacheEvict(value = "users", key = "#email")
     public String login(String email,String password) {
 
         Authentication auth = authenticationManager.authenticate(

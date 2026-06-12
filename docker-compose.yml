@@ -1,7 +1,6 @@
-version: '3.8'
+ version: '3.8'
 
 services:
-  # Service 1 : La Base de données MySQL
   db:
     image: mysql:8.0
     container_name: healthcare-db
@@ -15,21 +14,37 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
 
-  # Service 2 : Ton API Spring Boot
-  api:
+  redis:
+    image: redis:alpine
+    container_name: healthcare-redis
+    restart: always
+    ports:
+      - "6379:6379"
+
+  app:
     build: .
     container_name: healthcare-api
     ports:
       - "8080:8080"
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/healthcare_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      - SPRING_DATASOURCE_URL=jdbc:mysql://db:3306/healthcare_db?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
       - SPRING_DATASOURCE_USERNAME=healthcare_user
       - SPRING_DATASOURCE_PASSWORD=mysecretpassword
-      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
-      - SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT=org.hibernate.dialect.MySQLDialect
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=validate
+      - SPRING_FLYWAY_ENABLED=true
+      - JWT_SECRET=my_super_secure_secret_key_for_jwt_2026_healthcare_app
 
 volumes:
   mysql_data:

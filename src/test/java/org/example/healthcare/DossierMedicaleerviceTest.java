@@ -14,11 +14,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.io.ByteArrayInputStream;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @Transactional
@@ -76,5 +76,19 @@ public class DossierMedicaleerviceTest {
         assertThrows(IllegalStateException.class,()->{
             dossierMedicaleService.ajouter(dossierRequest);
         });
+    }
+
+    @Test
+    @DisplayName("Test d'exportation d'un dossier médical en PDF")
+    public void exportPdfTest() {
+        PatientRespenseDto patientSaved = patientService.ajouter(patientRequestDto);
+        DossierMedicaleRequestDto dossierRequest = new DossierMedicaleRequestDto(
+                LocalDateTime.now(),
+                patientSaved.getId()
+        );
+        DossierMedicaleResponseDto response = dossierMedicaleService.ajouter(dossierRequest);
+
+        ByteArrayInputStream bis = dossierMedicaleService.exportPdf(response.getId());
+        assertNotNull(bis);
     }
 }

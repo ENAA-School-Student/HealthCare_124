@@ -2,7 +2,7 @@ package org.example.healthcare.service;
 
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.example.healthcare.dto.consultation.ConsultationRequestDto;
 import org.example.healthcare.dto.consultation.ConsultationResponseDto;
 import org.example.healthcare.mapper.ConsultationMapper;
@@ -11,6 +11,8 @@ import org.example.healthcare.repository.ConsultationRepository;
 import org.example.healthcare.repository.DossierMedicaleRepository;
 import org.example.healthcare.repository.MedecinRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -34,6 +36,7 @@ public class ConsultationService {
 
 
     @Transactional
+    @CacheEvict(value = {"consultations", "consultations-pages"}, allEntries = true)
     public ConsultationResponseDto ajouter(ConsultationRequestDto requestDto){
         if (!dossierMedicaleRepository.existsById(requestDto.getDossier_medicale_id())){
             throw new EntityNotFoundException("Dossier introuvable");
@@ -48,20 +51,28 @@ public class ConsultationService {
     }
 
 
+
+    @Cacheable(value = "consultations",key = "'entity-' + #id")
     public Consultation findById(Long id) {
         return consultationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Consultation introuvable"));
     }
 
+
+    @Cacheable(value = "consultations",key = "'single-' + #id")
     public ConsultationResponseDto consulter(Long id){
         return consultationMapper.toDto(consultationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Consultation introuvable")));
     }
 
+
+    @Cacheable(value = "consultations",key = "'list-all'")
     public List<ConsultationResponseDto> consulterTous(){
         return consultationMapper.toListDto(consultationRepository.findAll());
     }
 
+
+    @CacheEvict(value = {"consultations", "consultations-pages"}, allEntries = true)
     public ConsultationResponseDto modifier(Long id, ConsultationRequestDto requestDto){
         Consultation consultation = consultationRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Consultation introuvable"));
@@ -77,6 +88,7 @@ public class ConsultationService {
 
 
     @Transactional
+    @CacheEvict(value = {"consultations", "consultations-pages"}, allEntries = true)
     public void supprimer(Long id){
         if (!consultationRepository.existsById(id)){
             throw new EntityNotFoundException("consultations introuvable");
@@ -84,7 +96,7 @@ public class ConsultationService {
         consultationRepository.deleteById(id);
     }
 
-
+    @Cacheable(value = "consultations-pages", key = "'list-' + #page + '-' + #size")
     public Page<ConsultationResponseDto> paginateConsultations(int page , int size){
         Pageable pageable = PageRequest.of(page, size);
         return consultationRepository.findAll(pageable).map(consultationMapper::toDto);

@@ -11,7 +11,7 @@ import java.util.List;
 
 
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {ConsultationMapper.class})
 public interface DossierMedicaleMapper {
 
 

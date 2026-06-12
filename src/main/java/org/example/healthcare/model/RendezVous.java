@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.healthcare.enums.RendezVousStatut;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Entity
 @Table(name = "rendez_vous")
-public class RendezVous {
+public class RendezVous implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
