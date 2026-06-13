@@ -1,22 +1,23 @@
-# Step 1: Build stage
-FROM maven:3.9.9-eclipse-temurin-21-alpine AS build
-WORKDIR /app
-COPY pom.xml .
-# Pre-download dependencies to speed up builds
-RUN mvn dependency:go-offline -B
-COPY src ./src
-RUN mvn clean package -DskipTests
+FROM eclipse-temurin:25-jdk-alpine AS build
 
-# Step 2: Run stage
-FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
-# On cible spécifiquement le JAR qui n'est pas "plain"
+
+COPY mvnw .
+COPY .mvn .mvn
+COPY pom.xml .
+
+RUN chmod +x mvnw && ./mvnw dependency:go-offline -B
+
+COPY src src
+
+RUN ./mvnw package -DskipTests -B
+
+FROM eclipse-temurin:25-jre-alpine
+
+WORKDIR /app
+
 COPY --from=build /app/target/HealthCare-0.0.1-SNAPSHOT.jar app.jar
 
 EXPOSE 8080
-
-# Use a non-root user for security (Railway and best practices)
-RUN addgroup -S spring && adduser -S spring -G spring
-USER spring:spring
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
