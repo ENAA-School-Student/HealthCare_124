@@ -10,7 +10,8 @@ RUN mvn clean package -DskipTests
 # Step 2: Run stage
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
+# On cible spécifiquement le JAR qui n'est pas "plain"
+COPY --from=build /app/target/HealthCare-0.0.1-SNAPSHOT.jar app.jar
 
 EXPOSE 8080
 
