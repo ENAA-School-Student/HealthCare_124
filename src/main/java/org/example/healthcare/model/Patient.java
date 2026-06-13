@@ -2,6 +2,7 @@ package org.example.healthcare.model;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -43,6 +44,7 @@ public class Patient extends User implements Serializable {
 
 
     @OneToOne(mappedBy = "patient")
+    @JsonIgnore
     private DossierMedicale dossierMedicale;
 
     @OneToMany(mappedBy = "patient")
