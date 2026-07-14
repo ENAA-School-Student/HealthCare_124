@@ -19,10 +19,6 @@ public class MedecinRequestDto {
     @NotBlank(message = "le prénom est obligatoire")
     private String prenom;
 
-    @NotBlank(message = "l'email est obligatoire")
-    @Email(message = "Invalid email format")
-    private String email;
-
 
     @NotBlank(message = "la specialite est obligatoire")
     private String specialite;

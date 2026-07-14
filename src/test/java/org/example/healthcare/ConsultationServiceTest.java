@@ -53,7 +53,7 @@
 //        DossierMedicaleResponseDto dossier = dossierMedicaleService.ajouter(dossierReq);
 //        savedDossierId = dossier.getId();
 //
-//        MedecinRequestDto medecin = new MedecinRequestDto("Dr. Idrissi", "Sami", "sami@healthcare.ma", "Généraliste");
+//        MedecinRequestDto medecin = new MedecinRequestDto("Dr. Idrissi", "Sami", "Généraliste");
 //        savedMedecinId = medecinService.ajouter(medecin).getId();
 //    }
 //

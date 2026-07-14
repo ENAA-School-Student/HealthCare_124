@@ -7,6 +7,7 @@ import org.example.healthcare.dto.rendezVous.RendezVousResponseDto;
 import org.example.healthcare.enums.RendezVousStatut;
 import org.example.healthcare.service.RendezVousService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -42,7 +43,7 @@ public class RendezVousController {
             @PathVariable Long id,
             @Valid @RequestBody RendezVousRequestDto requestDto
     ){
-        return ResponseEntity.status(HttpStatus.CREATED).body(rendezVousService.modifier(id,requestDto));
+        return ResponseEntity.status(HttpStatus.OK).body(rendezVousService.modifier(id,requestDto));
     }
 
     @PatchMapping("/{id}")
@@ -68,4 +69,23 @@ public class RendezVousController {
     public List<RendezVousResponseDto> chercherParMedecin(@PathVariable Long id){
         return rendezVousService.chercherRebdezVousParMedecin(id);
     }
+
+
+    @GetMapping("/tri/date")
+    public Page<RendezVousResponseDto> consulterRendezVousTriParDate(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        return rendezVousService.consulterRenderVousTriPAreDate(page, size);
+    }
+
+    @GetMapping("/recherche/statut")
+    public Page<RendezVousResponseDto> chercherRendezVousParStatutPagine(
+            @RequestParam RendezVousStatut statut,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        return rendezVousService.consulterRendervousparStatut(statut, page, size);
+    }
+
 }

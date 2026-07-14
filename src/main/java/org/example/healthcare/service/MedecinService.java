@@ -9,6 +9,9 @@ import org.example.healthcare.mapper.MedecinMapper;
 import org.example.healthcare.model.Medecin;
 import org.example.healthcare.repository.MedecinRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,30 +21,30 @@ public class MedecinService {
     @Autowired
     private MedecinRepository medecinRepository;
 
+
     @Autowired
     private MedecinMapper medecinMapper;
 
+
     @Transactional
-    public MedecinResponseDto ajouter(MedecinRequestDto requestDto) {
+    public MedecinResponseDto ajouter(MedecinRequestDto requestDto){
         Medecin medecin = medecinMapper.toEntity(requestDto);
         Medecin medecin_saved = medecinRepository.save(medecin);
         return medecinMapper.toDto(medecin_saved);
     }
 
-    public List<MedecinResponseDto> consulterTous() {
+    public List<MedecinResponseDto> consulterTous(){
         return medecinMapper.toListDto(medecinRepository.findAll());
     }
 
-    public MedecinResponseDto consulter(Long id) {
-        Medecin medecin = medecinRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Medecin introuvable avec l'id: " + id));
-        return medecinMapper.toDto(medecin);
+    public MedecinResponseDto consulter(Long id){
+        return medecinMapper.toDto(medecinRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Medecin introuvable avec l'id: " + id)));
     }
-
     @Transactional
-    public MedecinResponseDto modifier(Long id, MedecinRequestDto requestDto) {
-        if (!medecinRepository.existsById(id)) {
-            throw new EntityNotFoundException("Medecin introuvable avec l'id: " + id);
+    public  MedecinResponseDto modifier(Long id,MedecinRequestDto requestDto){
+        if (!medecinRepository.existsById(id)){
+            throw new EntityNotFoundException("Medecin introuvable");
         }
         Medecin medecin_a_modifier = medecinMapper.toEntity(requestDto);
         medecin_a_modifier.setId(id);
@@ -49,13 +52,28 @@ public class MedecinService {
     }
 
     @Transactional
-    public void supprimer(Long id) {
+    public void supprimer(Long id){
         Medecin medecin = medecinRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Medecin introuvable avec l'id: " + id));
+                .orElseThrow(() -> new EntityNotFoundException("Medecin introuvable"));
         medecinRepository.delete(medecin);
     }
 
-    public List<MedecinResponseDto> recupererLesMedcinsParPatient(Long id) {
+    public List<MedecinResponseDto> recupererLesMedcinsParPatient(Long id){
         return medecinMapper.toListDto(medecinRepository.recupererLesmedcindunpatient(id));
+    }
+
+
+    public Page<MedecinResponseDto> consulterMedecinTriparSpecialite(int page,int size){
+        Pageable pageable = PageRequest.of(page,size);
+
+        return medecinRepository.findAllByOrderBySpecialiteAsc(pageable).map(medecinMapper::toDto);
+
+    }
+
+    public Page<MedecinResponseDto>  chercherMedecinParSpecialite(String specialite,int page,int size){
+        Pageable pageable = PageRequest.of(page,size);
+
+        return medecinRepository.findAllBySpecialite(specialite,pageable).map(medecinMapper::toDto);
+
     }
 }
