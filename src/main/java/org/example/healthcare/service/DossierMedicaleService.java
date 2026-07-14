@@ -36,61 +36,57 @@ public class DossierMedicaleService {
     @Autowired
     private ConsultationMapper consultationMapper;
 
-
     @Transactional
-    public DossierMedicaleResponseDto ajouter(DossierMedicaleRequestDto requestDto){
-        if (!patientRepository.existsById(requestDto.getPatientId())) {
-            throw new EntityNotFoundException("Patient introuvable");
-        }
-        if (dossierMedicaleRepository.existsByPatient_Id(requestDto.getPatientId())){
+    public DossierMedicaleResponseDto ajouter(DossierMedicaleRequestDto requestDto) {
+        Patient patient = patientRepository.findById(requestDto.getPatientId())
+                .orElseThrow(() -> new EntityNotFoundException("Patient introuvable"));
+        if (dossierMedicaleRepository.existsByPatient_Id(requestDto.getPatientId())) {
             throw new IllegalStateException("Ce patient possède déjà un dossier médical.");
         }
-        DossierMedicale dossierMedicale = dossierMedicaleMapper.toEnity(requestDto);
-        dossierMedicale.setPatient(patientRepository.findById(requestDto.getPatientId()).get());
+        DossierMedicale dossierMedicale = dossierMedicaleMapper.toEntity(requestDto);
+        dossierMedicale.setPatient(patient);
         return dossierMedicaleMapper.toDto(dossierMedicaleRepository.save(dossierMedicale));
     }
 
-    public DossierMedicaleResponseDto consulter(Long id){
-        return dossierMedicaleMapper.toDto(dossierMedicaleRepository.findById(id).orElse(null));
+    public DossierMedicaleResponseDto consulter(Long id) {
+        DossierMedicale dossier = dossierMedicaleRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Dossier introuvable avec l'id: " + id));
+        return dossierMedicaleMapper.toDto(dossier);
     }
 
-    public List<DossierMedicaleResponseDto> consulterTous(){
+    public List<DossierMedicaleResponseDto> consulterTous() {
         return dossierMedicaleMapper.toListDto(dossierMedicaleRepository.findAll());
     }
 
-
     @Transactional
-    public DossierMedicaleResponseDto modifier(Long id, DossierMedicaleRequestDto requestDto){
-        if (!dossierMedicaleRepository.existsById(id)){
-            throw new EntityNotFoundException("Dossier introuvable");
+    public DossierMedicaleResponseDto modifier(Long id, DossierMedicaleRequestDto requestDto) {
+        if (!dossierMedicaleRepository.existsById(id)) {
+            throw new EntityNotFoundException("Dossier introuvable avec l'id: " + id);
         }
-        if (!patientRepository.existsById(requestDto.getPatientId())) {
-            throw new EntityNotFoundException("Patient introuvable");
-        }
-        DossierMedicale dossierMedicale = dossierMedicaleMapper.toEnity(requestDto);
+        Patient patient = patientRepository.findById(requestDto.getPatientId())
+                .orElseThrow(() -> new EntityNotFoundException("Patient introuvable"));
+        DossierMedicale dossierMedicale = dossierMedicaleMapper.toEntity(requestDto);
         dossierMedicale.setId(id);
-        dossierMedicale.setPatient(patientRepository.findById(requestDto.getPatientId()).get());
+        dossierMedicale.setPatient(patient);
         return dossierMedicaleMapper.toDto(dossierMedicaleRepository.save(dossierMedicale));
     }
 
     @Transactional
-    public void supprimer(Long id){
+    public void supprimer(Long id) {
         DossierMedicale dossier = dossierMedicaleRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Dossier introuvable"));
+                .orElseThrow(() -> new EntityNotFoundException("Dossier introuvable avec l'id: " + id));
+        dossierMedicaleRepository.delete(dossier);
+    }
 
-        if (dossier.getPatient() != null) {
-            dossier.getPatient().setDossierMedicale(null);
+    public DossierMedicaleResponseDto consulterParPatient(Long id) {
+        DossierMedicale dossier = dossierMedicaleRepository.findDossierMedicaleByPatient_Id(id);
+        if (dossier == null) {
+            throw new EntityNotFoundException("Aucun dossier trouvé pour le patient avec l'id: " + id);
         }
+        return dossierMedicaleMapper.toDto(dossier);
     }
 
-    public DossierMedicaleResponseDto consulterParPatient(Long id){
-        return dossierMedicaleMapper.toDto(dossierMedicaleRepository.findDossierMedicaleByPatient_Id(id));
-    }
-
-    public List<ConsultationResponseDto> consulterDossierConsultations(Long id){
+    public List<ConsultationResponseDto> consulterDossierConsultations(Long id) {
         return consultationMapper.toListDto(consultationRepository.findAllByDossierId(id));
     }
-
-
-
 }

@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.healthcare.enums.RendezVousStatut;
-import org.example.healthcare.model.Medecin;
-import org.example.healthcare.model.Patient;
 
 import java.time.LocalDateTime;
 
@@ -14,9 +12,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RendezVousResponseDto {
-    private Long id ;
+    private Long id;
     private LocalDateTime dateRendezVous;
     private RendezVousStatut statut;
-    private Patient patient;
-    private Medecin medecin;
+    private Long patientId;
+    private String patientNom;
+    private String patientPrenom;
+    private Long medecinId;
+    private String medecinNom;
+    private String medecinPrenom;
 }

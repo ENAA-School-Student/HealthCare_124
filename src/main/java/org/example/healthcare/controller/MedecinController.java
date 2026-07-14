@@ -20,20 +20,18 @@ public class MedecinController {
     private MedecinService medecinService;
 
     @GetMapping
-    public List<MedecinResponseDto> consulterTous(){
+    public List<MedecinResponseDto> consulterTous() {
         return medecinService.consulterTous();
     }
 
     @PostMapping
     public ResponseEntity<MedecinResponseDto> ajouter(
-            @Valid @RequestBody MedecinRequestDto requestDto){
+            @Valid @RequestBody MedecinRequestDto requestDto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(medecinService.ajouter(requestDto));
     }
 
     @GetMapping("/{id}")
-    public MedecinResponseDto consulter(
-            @PathVariable Long id
-    ){
+    public MedecinResponseDto consulter(@PathVariable Long id) {
         return medecinService.consulter(id);
     }
 
@@ -41,17 +39,18 @@ public class MedecinController {
     public ResponseEntity<MedecinResponseDto> modifier(
             @PathVariable Long id,
             @Valid @RequestBody MedecinRequestDto requestDto
-    ){
-        return ResponseEntity.status(HttpStatus.CREATED).body(medecinService.modifier(id,requestDto));
+    ) {
+        return ResponseEntity.status(HttpStatus.OK).body(medecinService.modifier(id, requestDto));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> supprimer(
-            @PathVariable Long id
-    ){
+    public ResponseEntity<Void> supprimer(@PathVariable Long id) {
         medecinService.supprimer(id);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/")
+    @GetMapping("/patient/{id}")
+    public List<MedecinResponseDto> getMedecinsParPatient(@PathVariable Long id) {
+        return medecinService.recupererLesMedcinsParPatient(id);
+    }
 }

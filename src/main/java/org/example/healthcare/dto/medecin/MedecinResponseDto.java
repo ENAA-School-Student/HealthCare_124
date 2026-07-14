@@ -4,7 +4,7 @@ package org.example.healthcare.dto.medecin;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.healthcare.model.RendezVous;
+import org.example.healthcare.dto.rendezVous.RendezVousResponseDto;
 
 import java.util.List;
 
@@ -12,11 +12,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MedecinResponseDto {
-    private long id;
-    private String nom ;
+    private Long id;
+    private String nom;
     private String prenom;
     private String email;
     private String specialite;
-    private List<RendezVous> rendezVous;
-
+    private List<RendezVousResponseDto> rendezVous;
 }

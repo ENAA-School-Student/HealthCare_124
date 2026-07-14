@@ -12,14 +12,15 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface ConsultationMapper {
 
-
-    @Mapping(target = "medecin" ,ignore = true)
-    @Mapping(target = "dossier" ,ignore = true)
+    @Mapping(target = "medecin", ignore = true)
+    @Mapping(target = "dossier", ignore = true)
     Consultation toEntity(ConsultationRequestDto requestDto);
 
+    @Mapping(target = "dossierId",     source = "dossier.id")
+    @Mapping(target = "medecinId",     source = "medecin.id")
+    @Mapping(target = "medecinNom",    source = "medecin.nom")
+    @Mapping(target = "medecinPrenom", source = "medecin.prenom")
     ConsultationResponseDto toDto(Consultation consultation);
 
     List<ConsultationResponseDto> toListDto(List<Consultation> consultations);
-
-
 }

@@ -7,6 +7,8 @@ import org.example.healthcare.dto.rendezVous.RendezVousRequestDto;
 import org.example.healthcare.dto.rendezVous.RendezVousResponseDto;
 import org.example.healthcare.enums.RendezVousStatut;
 import org.example.healthcare.mapper.RendezVousMapper;
+import org.example.healthcare.model.Medecin;
+import org.example.healthcare.model.Patient;
 import org.example.healthcare.model.RendezVous;
 import org.example.healthcare.repository.MedecinRepository;
 import org.example.healthcare.repository.PatientRepository;
@@ -31,69 +33,69 @@ public class RendezVousService {
     @Autowired
     private PatientRepository patientRepository;
 
-
     @Transactional
-    public RendezVousResponseDto ajouter(RendezVousRequestDto requestDto){
-        if (!patientRepository.existsById(requestDto.getPatientId())) {
-            throw new EntityNotFoundException("Patient introuvable");
-        }
-        if (!medecinRepository.existsById(requestDto.getMedecinId())){
-            throw new EntityNotFoundException("Medecin introuvable");
-        }
-        if (rendezVousRepository.existsByMedecinIdAndDateRendezVous(requestDto.getMedecinId(),requestDto.getDateRendezVous())){
+    public RendezVousResponseDto ajouter(RendezVousRequestDto requestDto) {
+        Patient patient = patientRepository.findById(requestDto.getPatientId())
+                .orElseThrow(() -> new EntityNotFoundException("Patient introuvable"));
+        Medecin medecin = medecinRepository.findById(requestDto.getMedecinId())
+                .orElseThrow(() -> new EntityNotFoundException("Medecin introuvable"));
+        if (rendezVousRepository.existsByMedecinIdAndDateRendezVous(requestDto.getMedecinId(), requestDto.getDateRendezVous())) {
             throw new IllegalStateException("Le médecin est déjà pris à cette date et heure.");
         }
         RendezVous rendezVous = rendezVousMapper.toEntity(requestDto);
-        rendezVous.setPatient(patientRepository.findById(requestDto.getPatientId()).get());
-        rendezVous.setMedecin(medecinRepository.findById(requestDto.getMedecinId()).get());
+        rendezVous.setPatient(patient);
+        rendezVous.setMedecin(medecin);
         return rendezVousMapper.toDto(rendezVousRepository.save(rendezVous));
     }
 
-    public RendezVousResponseDto consulter(Long id){
-        return rendezVousMapper.toDto(rendezVousRepository.findById(id).orElse(null));
+    public RendezVousResponseDto consulter(Long id) {
+        RendezVous rendezVous = rendezVousRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Rendez-vous introuvable avec l'id: " + id));
+        return rendezVousMapper.toDto(rendezVous);
     }
 
-    public List<RendezVousResponseDto> consulterTous(){
+    public List<RendezVousResponseDto> consulterTous() {
         return rendezVousMapper.toListDto(rendezVousRepository.findAll());
     }
 
-    public RendezVousResponseDto modifier(Long id , RendezVousRequestDto requestDto){
-        if (!rendezVousRepository.existsById(id)){
-            throw new EntityNotFoundException("Rendez-vous introuvable");
+    @Transactional
+    public RendezVousResponseDto modifier(Long id, RendezVousRequestDto requestDto) {
+        if (!rendezVousRepository.existsById(id)) {
+            throw new EntityNotFoundException("Rendez-vous introuvable avec l'id: " + id);
         }
-        RendezVous rendezVous_a_changer = rendezVousMapper.toEntity(requestDto);
-        rendezVous_a_changer.setId(id);
-        rendezVous_a_changer.setPatient(patientRepository.findById(requestDto.getPatientId()).get());
-        rendezVous_a_changer.setMedecin(medecinRepository.findById(requestDto.getMedecinId()).get());
-        return rendezVousMapper.toDto(rendezVousRepository.save(rendezVous_a_changer));
+        Patient patient = patientRepository.findById(requestDto.getPatientId())
+                .orElseThrow(() -> new EntityNotFoundException("Patient introuvable"));
+        Medecin medecin = medecinRepository.findById(requestDto.getMedecinId())
+                .orElseThrow(() -> new EntityNotFoundException("Medecin introuvable"));
+
+        RendezVous rendezVous = rendezVousMapper.toEntity(requestDto);
+        rendezVous.setId(id);
+        rendezVous.setPatient(patient);
+        rendezVous.setMedecin(medecin);
+        return rendezVousMapper.toDto(rendezVousRepository.save(rendezVous));
     }
 
-    public void modifierRendezVousStatut(Long id,RendezVousStatut rendezVousStatut){
-        if (!rendezVousRepository.existsById(id)){
-            throw new EntityNotFoundException("Rendez-vous introuvable");
-        }
-        RendezVous rendezVous = rendezVousRepository.findById(id).get();
+    @Transactional
+    public void modifierRendezVousStatut(Long id, RendezVousStatut rendezVousStatut) {
+        RendezVous rendezVous = rendezVousRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Rendez-vous introuvable avec l'id: " + id));
         rendezVous.setStatut(rendezVousStatut);
         rendezVousRepository.save(rendezVous);
     }
 
-    public void supprimer(Long id){
-        if (!rendezVousRepository.existsById(id)){
-            throw new EntityNotFoundException("Rendez-vous introuvable");
+    @Transactional
+    public void supprimer(Long id) {
+        if (!rendezVousRepository.existsById(id)) {
+            throw new EntityNotFoundException("Rendez-vous introuvable avec l'id: " + id);
         }
         rendezVousRepository.deleteById(id);
     }
 
-
-    public List<RendezVousResponseDto> chercherRebdezVousParPatient(Long id){
+    public List<RendezVousResponseDto> chercherRebdezVousParPatient(Long id) {
         return rendezVousMapper.toListDto(rendezVousRepository.findRendezVousByPatientId(id));
     }
 
-    public List<RendezVousResponseDto> chercherRebdezVousParMedecin(Long id){
+    public List<RendezVousResponseDto> chercherRebdezVousParMedecin(Long id) {
         return rendezVousMapper.toListDto(rendezVousRepository.findRendezVousByMedecinId(id));
     }
-
-
-
-
 }

@@ -18,29 +18,30 @@ public class MedecinService {
     @Autowired
     private MedecinRepository medecinRepository;
 
-
     @Autowired
     private MedecinMapper medecinMapper;
 
-
     @Transactional
-    public MedecinResponseDto ajouter(MedecinRequestDto requestDto){
+    public MedecinResponseDto ajouter(MedecinRequestDto requestDto) {
         Medecin medecin = medecinMapper.toEntity(requestDto);
         Medecin medecin_saved = medecinRepository.save(medecin);
         return medecinMapper.toDto(medecin_saved);
     }
 
-    public List<MedecinResponseDto> consulterTous(){
-        return medecinMapper.toLsitDto(medecinRepository.findAll());
+    public List<MedecinResponseDto> consulterTous() {
+        return medecinMapper.toListDto(medecinRepository.findAll());
     }
 
-    public MedecinResponseDto consulter(Long id){
-        return medecinMapper.toDto(medecinRepository.findById(id).orElse(null));
+    public MedecinResponseDto consulter(Long id) {
+        Medecin medecin = medecinRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Medecin introuvable avec l'id: " + id));
+        return medecinMapper.toDto(medecin);
     }
+
     @Transactional
-    public  MedecinResponseDto modifier(Long id,MedecinRequestDto requestDto){
-        if (!medecinRepository.existsById(id)){
-            throw new EntityNotFoundException("Medecin introuvable");
+    public MedecinResponseDto modifier(Long id, MedecinRequestDto requestDto) {
+        if (!medecinRepository.existsById(id)) {
+            throw new EntityNotFoundException("Medecin introuvable avec l'id: " + id);
         }
         Medecin medecin_a_modifier = medecinMapper.toEntity(requestDto);
         medecin_a_modifier.setId(id);
@@ -48,16 +49,13 @@ public class MedecinService {
     }
 
     @Transactional
-    public void supprimer(Long id){
+    public void supprimer(Long id) {
         Medecin medecin = medecinRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Medecin introuvable"));
+                .orElseThrow(() -> new EntityNotFoundException("Medecin introuvable avec l'id: " + id));
         medecinRepository.delete(medecin);
     }
 
-
-
-
-    public List<MedecinResponseDto> recupererLesMedcinsParPatient(Long id){
-        return medecinMapper.toLsitDto(medecinRepository.recupererLesmedcindunpatient(id));
+    public List<MedecinResponseDto> recupererLesMedcinsParPatient(Long id) {
+        return medecinMapper.toListDto(medecinRepository.recupererLesmedcindunpatient(id));
     }
 }

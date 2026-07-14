@@ -7,6 +7,8 @@ import org.example.healthcare.dto.consultation.ConsultationRequestDto;
 import org.example.healthcare.dto.consultation.ConsultationResponseDto;
 import org.example.healthcare.mapper.ConsultationMapper;
 import org.example.healthcare.model.Consultation;
+import org.example.healthcare.model.DossierMedicale;
+import org.example.healthcare.model.Medecin;
 import org.example.healthcare.repository.ConsultationRepository;
 import org.example.healthcare.repository.DossierMedicaleRepository;
 import org.example.healthcare.repository.MedecinRepository;
@@ -29,45 +31,50 @@ public class ConsultationService {
     @Autowired
     private DossierMedicaleRepository dossierMedicaleRepository;
 
-
     @Transactional
-    public ConsultationResponseDto ajouter(ConsultationRequestDto requestDto){
-        if (!dossierMedicaleRepository.existsById(requestDto.getDossier_medicale_id())){
-            throw new EntityNotFoundException("Dossier introuvable");
-        }
-        if (!medecinRepository.existsById(requestDto.getMedecin_id())){
-            throw new EntityNotFoundException("Medecin introuvable");
-        }
+    public ConsultationResponseDto ajouter(ConsultationRequestDto requestDto) {
+        DossierMedicale dossier = dossierMedicaleRepository.findById(requestDto.getDossier_medicale_id())
+                .orElseThrow(() -> new EntityNotFoundException("Dossier introuvable"));
+        Medecin medecin = medecinRepository.findById(requestDto.getMedecin_id())
+                .orElseThrow(() -> new EntityNotFoundException("Medecin introuvable"));
+
         Consultation consultation = consultationMapper.toEntity(requestDto);
-        consultation.setDossier(dossierMedicaleRepository.findById(requestDto.getDossier_medicale_id()).get());
-        consultation.setMedecin(medecinRepository.findById(requestDto.getMedecin_id()).get());
+        consultation.setDossier(dossier);
+        consultation.setMedecin(medecin);
         return consultationMapper.toDto(consultationRepository.save(consultation));
     }
 
-
-    public ConsultationResponseDto consulter(Long id){
-        return consultationMapper.toDto(consultationRepository.findById(id).get());
+    public ConsultationResponseDto consulter(Long id) {
+        Consultation consultation = consultationRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Consultation introuvable avec l'id: " + id));
+        return consultationMapper.toDto(consultation);
     }
 
-    public List<ConsultationResponseDto> consulterTous(){
+    public List<ConsultationResponseDto> consulterTous() {
         return consultationMapper.toListDto(consultationRepository.findAll());
     }
 
-    public ConsultationResponseDto modifier(Long id,ConsultationRequestDto requestDto){
-        if (!consultationRepository.existsById(id)){
-            throw new EntityNotFoundException("consultations introuvable");
+    @Transactional
+    public ConsultationResponseDto modifier(Long id, ConsultationRequestDto requestDto) {
+        if (!consultationRepository.existsById(id)) {
+            throw new EntityNotFoundException("Consultation introuvable avec l'id: " + id);
         }
+        DossierMedicale dossier = dossierMedicaleRepository.findById(requestDto.getDossier_medicale_id())
+                .orElseThrow(() -> new EntityNotFoundException("Dossier introuvable"));
+        Medecin medecin = medecinRepository.findById(requestDto.getMedecin_id())
+                .orElseThrow(() -> new EntityNotFoundException("Medecin introuvable"));
+
         Consultation consultation = consultationMapper.toEntity(requestDto);
-        consultation.setDossier(dossierMedicaleRepository.findById(requestDto.getDossier_medicale_id()).get());
-        consultation.setMedecin(medecinRepository.findById(requestDto.getMedecin_id()).get());
+        consultation.setId(id);
+        consultation.setDossier(dossier);
+        consultation.setMedecin(medecin);
         return consultationMapper.toDto(consultationRepository.save(consultation));
     }
 
-
     @Transactional
-    public void supprimer(Long id){
-        if (!consultationRepository.existsById(id)){
-            throw new EntityNotFoundException("consultations introuvable");
+    public void supprimer(Long id) {
+        if (!consultationRepository.existsById(id)) {
+            throw new EntityNotFoundException("Consultation introuvable avec l'id: " + id);
         }
         consultationRepository.deleteById(id);
     }

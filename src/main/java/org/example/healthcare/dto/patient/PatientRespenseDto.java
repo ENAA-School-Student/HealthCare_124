@@ -4,9 +4,9 @@ package org.example.healthcare.dto.patient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.example.healthcare.model.RendezVous;
+import org.example.healthcare.dto.rendezVous.RendezVousResponseDto;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -18,6 +18,6 @@ public class PatientRespenseDto {
     private String prenom;
     private String email;
     private String telephone;
-    private LocalDateTime dateNaissance;
-    private List<RendezVous> rendezVous;
+    private LocalDate dateNaissance;
+    private List<RendezVousResponseDto> rendezVous;
 }

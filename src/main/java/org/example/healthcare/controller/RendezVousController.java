@@ -33,7 +33,7 @@ public class RendezVousController {
     }
 
     @GetMapping("/{id}")
-    public RendezVousResponseDto consulter(Long id){
+    public RendezVousResponseDto consulter(@PathVariable Long id){
         return rendezVousService.consulter(id);
     }
 
